@@ -9,6 +9,9 @@ from arcade import (
     set_background_color,
     close_window,
 )
+from constants import *
+from hero import Hero
+from platform import Platform
 
 
 class MyWindow(Window):
@@ -18,7 +21,7 @@ class MyWindow(Window):
         """Конструктор для создания обычного окна"""
         super().__init__(fullscreen=True)
 
-        self.hero: Sprite = ...
+        self.hero: Hero = ...
         self.engine: PhysicsEnginePlatformer = ...
         self.scene: Scene = ...
 
@@ -26,13 +29,9 @@ class MyWindow(Window):
 
     def setup(self):
         """Загружает и создает все необходимые объекты для игры/уровня/режима"""
-        self.hero = Sprite("assets/dynamic_pics/hero.piskel.png", 1)
-        self.hero.center_x = 100
-        self.hero.center_y = 740
+        self.hero = Hero()
 
-        platform = Sprite("assets/static_pics/platform.png", 1)
-        platform.center_x = 140
-        platform.center_y = 70
+        platform = Platform()
 
         self.scene = Scene()
         self.scene.add_sprite("Players", self.hero)
@@ -51,29 +50,28 @@ class MyWindow(Window):
         # Выход из игры
         if symbol == key.ESCAPE:
             close_window()
+            return
+
+        # Управление
+        if symbol == key.D or symbol == key.RIGHT:
+            self.hero.change_x = HERO_SPEED
+            self.hero.is_moved = True
+            return
+
+        # Управление
+        if symbol == key.A or symbol == key.LEFT:
+            self.hero.change_x = -HERO_SPEED
+            self.hero.is_moved = True
+
+    def on_key_release(self, symbol: int, modifiers: int):
+        """Выполняет команды, связанные с кнопками. Вызывается при отжатии клавиш"""
+        # замедление при бездействии
+        self.hero.is_moved = False
 
     def on_update(self, delta_time: float):
         """Обновление местоположения всех объектов игры"""
+        self.hero.on_update(walls=self.scene["Walls"])
         self.engine.update()
-
-        self.hero: Sprite = ...
-        self.players: SpriteList = ...
-
-        set_background_color(background)
-
-    def setup(self):
-        """Загружает и создает все необходимые объекты для игры/уровня/режима"""
-        self.hero = Sprite("assets/main_hero.png", 1)
-        self.hero.center_x = 100
-        self.hero.center_y = 100
-
-        self.players = SpriteList()
-        self.players.append(self.hero)
-
-    def on_draw(self):
-        """Прорисовка всех объектов и структур на экране"""
-        self.clear()
-        self.players.draw()
 
 
 def game(window: MyWindow = MyWindow()):
