@@ -23,7 +23,7 @@ class Hero(Sprite):
             "assets/dynamic_pics/hero.piskel.png",
             SCALE,
             center_x=HERO_START_X,
-            center_y=HERO_START_Y
+            center_y=HERO_START_Y,
         )
         self.is_moved = False
         self.speed = HERO_SPEED
