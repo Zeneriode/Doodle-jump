@@ -1,17 +1,16 @@
+from game.game_platforms import SimplePlatform
+
 from arcade import (
     PhysicsEnginePlatformer,
     Scene,
-    Sprite,
     Window,
+    close_window,
     color,
     key,
     run,
     set_background_color,
-    close_window,
 )
-from constants import *
-from hero import Hero
-from platform import Platform
+from game.hero import Hero
 
 
 class MyWindow(Window):
@@ -31,7 +30,7 @@ class MyWindow(Window):
         """Загружает и создает все необходимые объекты для игры/уровня/режима"""
         self.hero = Hero()
 
-        platform = Platform()
+        platform = SimplePlatform(160, 170)
 
         self.scene = Scene()
         self.scene.add_sprite("Players", self.hero)
@@ -54,13 +53,13 @@ class MyWindow(Window):
 
         # Управление
         if symbol == key.D or symbol == key.RIGHT:
-            self.hero.change_x = HERO_SPEED
+            self.hero.change_x = self.hero.speed
             self.hero.is_moved = True
             return
 
         # Управление
         if symbol == key.A or symbol == key.LEFT:
-            self.hero.change_x = -HERO_SPEED
+            self.hero.change_x = -self.hero.speed
             self.hero.is_moved = True
 
     def on_key_release(self, symbol: int, modifiers: int):
