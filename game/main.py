@@ -1,5 +1,8 @@
-from game.game_platforms import SimplePlatform
-
+"""
+Главный файл игры - реализация класса окна.
+Окно генерирует сцену для уровня.
+Файл запускает игру, запуск используется для тестирования.
+"""
 from arcade import (
     PhysicsEnginePlatformer,
     Scene,
@@ -10,7 +13,8 @@ from arcade import (
     run,
     set_background_color,
 )
-from game.hero import Hero
+from game_platforms import SimplePlatform
+from hero import Hero
 
 
 class MyWindow(Window):
@@ -51,14 +55,11 @@ class MyWindow(Window):
             close_window()
             return
 
-        # Управление
-        if symbol == key.D or symbol == key.RIGHT:
+        # движение вправо и влево
+        if symbol in (key.D, key.RIGHT):
             self.hero.change_x = self.hero.speed
             self.hero.is_moved = True
-            return
-
-        # Управление
-        if symbol == key.A or symbol == key.LEFT:
+        elif symbol in (key.A, key.LEFT):
             self.hero.change_x = -self.hero.speed
             self.hero.is_moved = True
 
