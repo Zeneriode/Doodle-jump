@@ -13,7 +13,7 @@ from arcade import (
     run,
     set_background_color,
 )
-from game_platforms import SimplePlatform
+from game_platforms import SimplePlatform, Trampoline, PlatformJump
 from hero import Hero
 
 
@@ -34,13 +34,12 @@ class MyWindow(Window):
         """Загружает и создает все необходимые объекты для игры/уровня/режима"""
         self.hero = Hero()
 
-        platform = SimplePlatform(160, 170)
-
         self.scene = Scene()
         self.scene.add_sprite("Players", self.hero)
         self.scene.add_sprite_list("Walls", True)
-        self.scene.add_sprite("Walls", platform)
-
+        self.scene.add_sprite("Walls", SimplePlatform(1200, 170))
+        self.scene.add_sprite("Walls", Trampoline(650, 190))
+        self.scene.add_sprite("Walls", PlatformJump(200, 250))
         self.engine = PhysicsEnginePlatformer(self.hero, walls=self.scene["Walls"])
 
     def on_draw(self):
