@@ -4,6 +4,7 @@
 Файл запускает игру, запуск используется для тестирования.
 """
 from arcade import (
+    Camera,
     PhysicsEnginePlatformer,
     Scene,
     Window,
@@ -25,8 +26,9 @@ class MyWindow(Window):
         super().__init__(fullscreen=True)
 
         self.hero: Hero = ...
-        self.engine: PhysicsEnginePlatformer = ...
         self.scene: Scene = ...
+        self.camera: Camera = ...
+        self.engine: PhysicsEnginePlatformer = ...
 
         set_background_color(background)
 
@@ -40,12 +42,15 @@ class MyWindow(Window):
         self.scene.add_sprite("Walls", SimplePlatform(1200, 170))
         self.scene.add_sprite("Walls", Trampoline(650, 190))
         self.scene.add_sprite("Walls", PlatformJump(200, 250))
+
+        self.camera = Camera(960, 540)
         self.engine = PhysicsEnginePlatformer(self.hero, walls=self.scene["Walls"])
 
     def on_draw(self):
         """Прорисовка всех объектов и структур на экране"""
         self.clear()
         self.scene.draw()
+        self.camera.use()
 
     def on_key_press(self, symbol: int, modifiers: int):
         """Выполняет команды, связанные с кнопками. Вызывается при нажатии на любую клавишу"""
@@ -67,10 +72,15 @@ class MyWindow(Window):
         # замедление при бездействии
         self.hero.is_moved = False
 
+    def camera_under_control(self):
+        """Смещаем камеру, когда главному герою это нужно"""
+        pass
+
     def on_update(self, delta_time: float):
         """Обновление местоположения всех объектов игры"""
         self.hero.on_update(walls=self.scene["Walls"])
         self.engine.update()
+        self.camera_under_control()
 
 
 def game(window: MyWindow = MyWindow()):
