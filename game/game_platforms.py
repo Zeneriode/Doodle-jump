@@ -36,4 +36,6 @@ class PlatformJump(Platform):
     """Платформа с пружинкой"""
 
     def __init__(self, center_x: float, center_y: float):
-        super().__init__("assets/dynamic_pics/platformjump.piskel.png", center_x, center_y)
+        super().__init__(
+            "assets/dynamic_pics/platformjump.piskel.png", center_x, center_y
+        )

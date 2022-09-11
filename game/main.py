@@ -13,7 +13,7 @@ from arcade import (
     run,
     set_background_color,
 )
-from game_platforms import SimplePlatform, Trampoline, PlatformJump
+from game_platforms import PlatformJump, SimplePlatform, Trampoline
 from hero import Hero
 
 
