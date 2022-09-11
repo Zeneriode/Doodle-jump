@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "doodle-jump"
+version = "0.1.0"
+description = "Простая оболочка для запуска игры на личном компьютере"
+authors = ["qwickq <ivan2008dmitriev@yandex.ru>; Zener_085 <zener.085@mail.ru>"]
+readme = "README.md"
+packages = [{include = "doodle_jump"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+arcade = "^2.6.15"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
