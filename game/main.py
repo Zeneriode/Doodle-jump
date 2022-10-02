@@ -14,10 +14,10 @@ from arcade import (
     run,
     set_background_color,
 )
+from constants import CAMERA_SHIFT
 from game_platforms import PlatformJump, SimplePlatform, Trampoline
 from hero import Hero
 from pyglet.math import Vec2
-from constants import CAMERA_SHIFT
 
 
 class MyWindow(Window):
@@ -46,7 +46,9 @@ class MyWindow(Window):
         self.scene.add_sprite("Walls", PlatformJump(200, 250))
 
         self.camera = Camera(self.width, self.height)
-        self.camera.move(Vec2(0, self.hero.center_y - self.camera.viewport_height / CAMERA_SHIFT))
+        self.camera.move(
+            Vec2(0, self.hero.center_y - self.camera.viewport_height / CAMERA_SHIFT)
+        )
         self.engine = PhysicsEnginePlatformer(self.hero, walls=self.scene["Walls"])
 
     def on_draw(self):

@@ -6,11 +6,11 @@
 from arcade import Sprite, SpriteList
 from constants import (
     HERO_JUMP,
+    HERO_SCALE,
     HERO_SLOWDOWN,
     HERO_SPEED,
     HERO_START_X,
     HERO_START_Y,
-    HERO_SCALE,
 )
 
 
