@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "doodle-jump"
+name = "Doodle-jump"
 version = "0.1.0"
 description = "Простая оболочка для запуска игры на личном компьютере"
 authors = ["qwickq <ivan2008dmitriev@yandex.ru>", "Zener_085 <zener.085@mail.ru>"]
 readme = "README.md"
-packages = [{include = "doodle_jump"}]
+packages = [{include = "game"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"

@@ -81,7 +81,9 @@ class MyWindow(Window):
         """Смещаем камеру, когда главному герою это нужно"""
         # Камера поднимается за героем, вниз камера не опускается
         if self.hero.change_y > 0 and self.hero.center_y >= self.hero.max_height:
-            self.camera.move(Vec2(0, self.hero.center_y - self.camera.viewport_height / CAMERA_SHIFT))
+            self.camera.move(
+                Vec2(0, self.hero.center_y - self.camera.viewport_height / CAMERA_SHIFT)
+            )
 
     def on_update(self, delta_time: float):
         """Обновление местоположения всех объектов игры"""

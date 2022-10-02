@@ -111,8 +111,8 @@ python-versions = ">=3.7"
 
 [metadata]
 lock-version = "1.1"
-python-versions = "^3.10"
-content-hash = "1354f853f6f00bc011efc0821916dc399dbedf92bd54d760bdd00ef5f377b545"
+python-versions = "^3.9"
+content-hash = "18cd3ef531496f7657da3d1584740999013e4112730295ae7974465fc3dc7209"
 
 [metadata.files]
 arcade = [
