@@ -10,7 +10,7 @@ from constants import (
     HERO_SPEED,
     HERO_START_X,
     HERO_START_Y,
-    SCALE,
+    HERO_SCALE,
 )
 
 
@@ -21,10 +21,11 @@ class Hero(Sprite):
         """Конструктор для главного героя"""
         super().__init__(
             "assets/dynamic_pics/hero.piskel.png",
-            SCALE,
+            HERO_SCALE,
             center_x=HERO_START_X,
             center_y=HERO_START_Y,
         )
+        self.max_height = self.center_y
         self.is_moved = False
         self.speed = HERO_SPEED
         self.change_x = 0
@@ -37,6 +38,7 @@ class Hero(Sprite):
             self.change_x /= self.slowdown
 
         self.__jump(walls)
+        self.max_height = max(self.max_height, self.center_y)
 
     def __jump(self, walls: SpriteList):
         """Заставляет героя прыгать"""
