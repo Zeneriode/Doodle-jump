@@ -6,12 +6,15 @@
 from arcade import Sprite, SpriteList
 from constants import (
     HERO_JUMP,
+    HERO_PLATFORMJUMP,
+    HERO_TRAMPOLINE,
     HERO_SCALE,
     HERO_SLOWDOWN,
     HERO_SPEED,
     HERO_START_X,
     HERO_START_Y,
 )
+from game_platforms import PlatformJump, SimplePlatform, Trampoline
 
 
 class Hero(Sprite):
@@ -44,11 +47,16 @@ class Hero(Sprite):
         """Заставляет героя прыгать"""
         for wall in walls:
             if (
-                self.bottom <= wall.top < self.top
-                and self.right > wall.left
-                and self.left < wall.right
+                    self.bottom <= wall.top < self.top
+                    and self.right > wall.left
+                    and self.left < wall.right
             ):
-                self.change_y = HERO_JUMP
-
+                if isinstance(wall, SimplePlatform):
+                    self.change_y = HERO_JUMP
+                elif isinstance(wall, PlatformJump):
+                    self.change_y = HERO_PLATFORMJUMP
+                elif isinstance(wall, Trampoline):
+                    self.change_y = HERO_TRAMPOLINE
+                """Указываем с какой силой герой должен отпрыгнутьот той или иной платформы"""
     def shoot(self):
         """Игрок стреляет в указанное направление"""
