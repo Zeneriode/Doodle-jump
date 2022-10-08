@@ -7,12 +7,12 @@ from arcade import Sprite, SpriteList
 from constants import (
     HERO_JUMP,
     HERO_PLATFORMJUMP,
-    HERO_TRAMPOLINE,
     HERO_SCALE,
     HERO_SLOWDOWN,
     HERO_SPEED,
     HERO_START_X,
     HERO_START_Y,
+    HERO_TRAMPOLINE
 )
 from game_platforms import PlatformJump, SimplePlatform, Trampoline
 
