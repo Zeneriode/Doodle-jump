@@ -47,9 +47,9 @@ class Hero(Sprite):
         """Заставляет героя прыгать"""
         for wall in walls:
             if (
-                    self.bottom <= wall.top < self.top
-                    and self.right > wall.left
-                    and self.left < wall.right
+                self.bottom <= wall.top < self.top
+                and self.right > wall.left
+                and self.left < wall.right
             ):
                 if isinstance(wall, SimplePlatform):
                     self.change_y = HERO_JUMP
