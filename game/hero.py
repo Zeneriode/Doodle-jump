@@ -51,12 +51,13 @@ class Hero(Sprite):
                 and self.right > wall.left
                 and self.left < wall.right
             ):
+                # Указываем с какой силой герой должен отпрыгнуть от той или иной платформы
                 if isinstance(wall, SimplePlatform):
                     self.change_y = HERO_JUMP
                 elif isinstance(wall, PlatformJump):
                     self.change_y = HERO_PLATFORMJUMP
                 elif isinstance(wall, Trampoline):
                     self.change_y = HERO_TRAMPOLINE
-                """Указываем с какой силой герой должен отпрыгнутьот той или иной платформы"""
+
     def shoot(self):
         """Игрок стреляет в указанное направление"""
