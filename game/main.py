@@ -14,8 +14,10 @@ from arcade import (
     run,
     set_background_color,
 )
+from constants import CAMERA_SHIFT
 from game_platforms import PlatformJump, SimplePlatform, Trampoline
 from hero import Hero
+from pyglet.math import Vec2
 
 
 class MyWindow(Window):
@@ -39,18 +41,21 @@ class MyWindow(Window):
         self.scene = Scene()
         self.scene.add_sprite("Players", self.hero)
         self.scene.add_sprite_list("Walls", True)
-        self.scene.add_sprite("Walls", SimplePlatform(1200, 170))
+        self.scene.add_sprite("Walls", SimplePlatform(1200, 570))
         self.scene.add_sprite("Walls", Trampoline(650, 190))
         self.scene.add_sprite("Walls", PlatformJump(200, 250))
 
-        self.camera = Camera(960, 540)
+        self.camera = Camera(self.width, self.height)
+        self.camera.move(
+            Vec2(0, self.hero.center_y - self.camera.viewport_height / CAMERA_SHIFT)
+        )
         self.engine = PhysicsEnginePlatformer(self.hero, walls=self.scene["Walls"])
 
     def on_draw(self):
         """Прорисовка всех объектов и структур на экране"""
         self.clear()
-        self.scene.draw()
         self.camera.use()
+        self.scene.draw()
 
     def on_key_press(self, symbol: int, modifiers: int):
         """Выполняет команды, связанные с кнопками. Вызывается при нажатии на любую клавишу"""
@@ -74,7 +79,11 @@ class MyWindow(Window):
 
     def camera_under_control(self):
         """Смещаем камеру, когда главному герою это нужно"""
-        pass
+        # Камера поднимается за героем, вниз камера не опускается
+        if self.hero.change_y > 0 and self.hero.center_y >= self.hero.max_height:
+            self.camera.move(
+                Vec2(0, self.hero.center_y - self.camera.viewport_height / CAMERA_SHIFT)
+            )
 
     def on_update(self, delta_time: float):
         """Обновление местоположения всех объектов игры"""

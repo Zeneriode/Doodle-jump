@@ -6,12 +6,15 @@
 from arcade import Sprite, SpriteList
 from constants import (
     HERO_JUMP,
+    HERO_PLATFORMJUMP,
+    HERO_SCALE,
     HERO_SLOWDOWN,
     HERO_SPEED,
     HERO_START_X,
     HERO_START_Y,
-    SCALE,
+    HERO_TRAMPOLINE,
 )
+from game_platforms import PlatformJump, SimplePlatform, Trampoline
 
 
 class Hero(Sprite):
@@ -21,10 +24,11 @@ class Hero(Sprite):
         """Конструктор для главного героя"""
         super().__init__(
             "assets/dynamic_pics/hero.piskel.png",
-            SCALE,
+            HERO_SCALE,
             center_x=HERO_START_X,
             center_y=HERO_START_Y,
         )
+        self.max_height = self.center_y
         self.is_moved = False
         self.speed = HERO_SPEED
         self.change_x = 0
@@ -37,6 +41,7 @@ class Hero(Sprite):
             self.change_x /= self.slowdown
 
         self.__jump(walls)
+        self.max_height = max(self.max_height, self.center_y)
 
     def __jump(self, walls: SpriteList):
         """Заставляет героя прыгать"""
@@ -46,7 +51,13 @@ class Hero(Sprite):
                 and self.right > wall.left
                 and self.left < wall.right
             ):
-                self.change_y = HERO_JUMP
+                # Указываем с какой силой герой должен отпрыгнуть от той или иной платформы
+                if isinstance(wall, SimplePlatform):
+                    self.change_y = HERO_JUMP
+                elif isinstance(wall, PlatformJump):
+                    self.change_y = HERO_PLATFORMJUMP
+                elif isinstance(wall, Trampoline):
+                    self.change_y = HERO_TRAMPOLINE
 
     def shoot(self):
         """Игрок стреляет в указанное направление"""
