@@ -11,7 +11,7 @@ class Platform(Sprite):
 
     def __init__(self, file: str, center_x: float, center_y: float):
         """Конструктор для платформ"""
-        super().__init__(file, SCALE, center_x=center_x, center_y=center_y)
+        super().__init__(file, SCALE, center_x=center_x, center_y=center_y, hit_box_algorithm="Detailed")
 
 
 class Trampoline(Platform):
