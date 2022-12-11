@@ -3,9 +3,11 @@
 Окно генерирует сцену для уровня.
 Файл запускает игру, запуск используется для тестирования.
 """
+from random import randint
+from typing import Type, Union
+
 from arcade import (
     Camera,
-    PhysicsEnginePlatformer,
     Scene,
     Window,
     close_window,
@@ -14,9 +16,12 @@ from arcade import (
     run,
     set_background_color,
 )
-from constants import CAMERA_SHIFT
+from constants import CAMERA_SHIFT, COUNT_PLATFORMS, DECREASE_PLATFORMS_LEVEL_1
 from game_platforms import PlatformJump, SimplePlatform, Trampoline
 from hero import Hero
+from numpy import array
+from numpy.linalg import norm
+from numpy.random import choice
 from pyglet.math import Vec2
 
 
@@ -30,7 +35,8 @@ class MyWindow(Window):
         self.hero: Hero = ...
         self.scene: Scene = ...
         self.camera: Camera = ...
-        self.engine: PhysicsEnginePlatformer = ...
+        self.number_of_platforms: int = 0
+        self.count_platforms: int = 0
 
         set_background_color(background)
 
@@ -42,14 +48,14 @@ class MyWindow(Window):
         self.scene.add_sprite("Players", self.hero)
         self.scene.add_sprite_list("Walls", True)
         self.scene.add_sprite("Walls", SimplePlatform(1200, 570))
-        self.scene.add_sprite("Walls", Trampoline(650, 190))
-        self.scene.add_sprite("Walls", PlatformJump(200, 250))
-
+        self.scene.add_sprite("Walls", SimplePlatform(650, 190))
+        self.scene.add_sprite("Walls", SimplePlatform(200, 250))
+        self.number_of_platforms = 3
+        self.count_platforms = COUNT_PLATFORMS
         self.camera = Camera(self.width, self.height)
         self.camera.move(
             Vec2(0, self.hero.center_y - self.camera.viewport_height / CAMERA_SHIFT)
         )
-        self.engine = PhysicsEnginePlatformer(self.hero, walls=self.scene["Walls"])
 
     def on_draw(self):
         """Прорисовка всех объектов и структур на экране"""
@@ -85,11 +91,92 @@ class MyWindow(Window):
                 Vec2(0, self.hero.center_y - self.camera.viewport_height / CAMERA_SHIFT)
             )
 
+    def new_platforms(self):
+        """Добавляет нужные платформы"""
+        if self.count_platforms > len(self.scene["Walls"]):
+            self.number_of_platforms += 1
+            coordinates = self.generate_coordinates()
+            platform_type = self.generate_type_platform()
+            self.scene.add_sprite(
+                "Walls", platform_type(coordinates[0], coordinates[1])
+            )
+
+    def generate_type_platform(
+        self,
+    ) -> Type[Union[SimplePlatform, PlatformJump, Trampoline]]:
+        """Генерирует тип платформы"""
+        simple_platforms_in_row = 12
+        if self.number_of_platforms % simple_platforms_in_row:
+            return SimplePlatform
+
+        return choice([PlatformJump, Trampoline])
+
+    def generate_coordinates(self) -> tuple:
+        """Генерирует случайные координаты для новой платформы"""
+        min_height_to_create = int(self.hero.max_height) + 300
+        max_height_to_create = min_height_to_create + 600
+
+        platform_x = randint(160, self.width - 160)
+        platform_y = randint(min_height_to_create, max_height_to_create)
+
+        while not self.check_valid_coordinates(platform_x, platform_y):
+            platform_x = randint(160, self.width - 160)
+            platform_y = randint(min_height_to_create, max_height_to_create)
+
+        return platform_x, platform_y
+
+    def check_valid_coordinates(self, platform_x: int, platform_y: int) -> bool:
+        """
+        Проверяет, что новая платформа не пересекает другие\n
+        :param platform_x: координата новой платформы по Х
+        :param platform_y: координата новой платформы по Y
+        :return: False, если новая платформа пересекает другие; True, если всё хорошо
+        """
+        min_distance_between_platforms = 500
+        min_distance = min_distance_between_platforms + 1
+        for wall in self.scene["Walls"]:
+            distance = norm(
+                array([wall.center_x, wall.center_y]) - array([platform_x, platform_y])
+            )
+            min_distance = min(min_distance, distance)
+        return min_distance > min_distance_between_platforms
+
+    def delete_platforms(self):
+        """Удаляет бесполезные платформы"""
+        camera_y = self.camera.position[1]
+        platforms = self.scene["Walls"]
+        platforms_number = len(platforms)
+
+        for i in range(platforms_number - 1, -1, -1):
+            if platforms[i].center_y < camera_y:
+                platforms.pop(i)
+
     def on_update(self, delta_time: float):
         """Обновление местоположения всех объектов игры"""
+        if self.is_fallen():
+            close_window()
+
+        if (
+            self.number_of_platforms == DECREASE_PLATFORMS_LEVEL_1
+            and self.count_platforms > COUNT_PLATFORMS - 1
+        ):
+            self.count_platforms -= 1
         self.hero.on_update(walls=self.scene["Walls"])
-        self.engine.update()
         self.camera_under_control()
+        self.hero_stay_visible()
+        self.delete_platforms()
+        self.new_platforms()
+
+    def is_fallen(self) -> bool:
+        """Проверяет, упал ли герой"""
+        return self.hero.top < self.hero.max_height - self.camera.viewport_height
+
+    def hero_stay_visible(self):
+        """Возвращает героя, если он вышел за боковые границы"""
+        if self.hero.right < 0:
+            self.hero.center_x = self.width
+        if self.hero.left > self.width:
+            self.hero.center_x = 0
 
 
 def game(window: MyWindow = MyWindow()):
