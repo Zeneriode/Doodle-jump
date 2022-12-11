@@ -3,6 +3,9 @@
 Окно генерирует сцену для уровня.
 Файл запускает игру, запуск используется для тестирования.
 """
+from random import randint
+from typing import Type, Union
+
 from arcade import (
     Camera,
     Scene,
@@ -20,8 +23,6 @@ from numpy import array
 from numpy.linalg import norm
 from numpy.random import choice
 from pyglet.math import Vec2
-from random import randint
-from typing import Union, Type
 
 
 class MyWindow(Window):
@@ -34,8 +35,8 @@ class MyWindow(Window):
         self.hero: Hero = ...
         self.scene: Scene = ...
         self.camera: Camera = ...
-        self.number_of_platforms: int = ...
-        self.count_platforms: int = ...
+        self.number_of_platforms: int = 0
+        self.count_platforms: int = 0
 
         set_background_color(background)
 
@@ -96,9 +97,13 @@ class MyWindow(Window):
             self.number_of_platforms += 1
             coordinates = self.generate_coordinates()
             platform_type = self.generate_type_platform()
-            self.scene.add_sprite("Walls", platform_type(coordinates[0], coordinates[1]))
+            self.scene.add_sprite(
+                "Walls", platform_type(coordinates[0], coordinates[1])
+            )
 
-    def generate_type_platform(self) -> Type[Union[SimplePlatform, PlatformJump, Trampoline]]:
+    def generate_type_platform(
+        self,
+    ) -> Type[Union[SimplePlatform, PlatformJump, Trampoline]]:
         """Генерирует тип платформы"""
         simple_platforms_in_row = 12
         if self.number_of_platforms % simple_platforms_in_row:
@@ -130,7 +135,9 @@ class MyWindow(Window):
         min_distance_between_platforms = 500
         min_distance = min_distance_between_platforms + 1
         for wall in self.scene["Walls"]:
-            distance = norm(array([wall.center_x, wall.center_y]) - array([platform_x, platform_y]))
+            distance = norm(
+                array([wall.center_x, wall.center_y]) - array([platform_x, platform_y])
+            )
             min_distance = min(min_distance, distance)
         return min_distance > min_distance_between_platforms
 
@@ -149,7 +156,10 @@ class MyWindow(Window):
         if self.is_fallen():
             close_window()
 
-        if self.number_of_platforms == DECREASE_PLATFORMS_LEVEL_1 and self.count_platforms > COUNT_PLATFORMS - 1:
+        if (
+            self.number_of_platforms == DECREASE_PLATFORMS_LEVEL_1
+            and self.count_platforms > COUNT_PLATFORMS - 1
+        ):
             self.count_platforms -= 1
         self.hero.on_update(walls=self.scene["Walls"])
         self.camera_under_control()

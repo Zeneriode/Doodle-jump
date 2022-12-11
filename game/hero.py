@@ -22,6 +22,11 @@ class Hero(Sprite):
 
     def __init__(self):
         """Конструктор для главного героя"""
+        self.change_x = 0
+        self.change_y = 0
+        self.center_x = 0
+        self.center_y = 0
+
         super().__init__(
             "assets/dynamic_pics/hero.piskel.png",
             SCALE,
@@ -29,11 +34,10 @@ class Hero(Sprite):
             center_y=HERO_START_Y,
             hit_box_algorithm="Detailed",
         )
+
         self.max_height = self.center_y
         self.is_moved = False
         self.speed = HERO_SPEED
-        self.change_x = 0
-        self.change_y = 0
         self.slowdown = HERO_SLOWDOWN
 
     def on_update(self, delta_time: float = 1 / 60, walls: SpriteList = SpriteList()):
