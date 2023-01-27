@@ -17,11 +17,12 @@ from arcade import (
     set_background_color,
 )
 from constants import CAMERA_SHIFT, COUNT_PLATFORMS, DECREASE_PLATFORMS_LEVEL_1
-from game_platforms import PlatformJump, SimplePlatform, Trampoline
+from game_platforms import Platform, PlatformJump, SimplePlatform, Trampoline
 from hero import Hero
 from numpy import array
 from numpy.linalg import norm
 from numpy.random import choice
+from monsters import Penguin, Zombie, Penguin2
 from pyglet.math import Vec2
 
 
@@ -47,6 +48,7 @@ class MyWindow(Window):
         self.scene = Scene()
         self.scene.add_sprite("Players", self.hero)
         self.scene.add_sprite_list("Walls", True)
+        self.scene.add_sprite_list("Monsters")
         self.scene.add_sprite("Walls", SimplePlatform(1200, 570))
         self.scene.add_sprite("Walls", SimplePlatform(650, 190))
         self.scene.add_sprite("Walls", SimplePlatform(200, 250))
@@ -95,14 +97,14 @@ class MyWindow(Window):
         """Добавляет нужные платформы"""
         if self.count_platforms > len(self.scene["Walls"]):
             self.number_of_platforms += 1
-            coordinates = self.generate_coordinates()
+            coordinates = self.generate_platform_coordinates()
             platform_type = self.generate_type_platform()
             self.scene.add_sprite(
                 "Walls", platform_type(coordinates[0], coordinates[1])
             )
 
     def generate_type_platform(
-        self,
+            self,
     ) -> Type[Union[SimplePlatform, PlatformJump, Trampoline]]:
         """Генерирует тип платформы"""
         simple_platforms_in_row = 12
@@ -111,7 +113,7 @@ class MyWindow(Window):
 
         return choice([PlatformJump, Trampoline])
 
-    def generate_coordinates(self) -> tuple:
+    def generate_platform_coordinates(self) -> tuple:
         """Генерирует случайные координаты для новой платформы"""
         min_height_to_create = int(self.hero.max_height) + 300
         max_height_to_create = min_height_to_create + 600
@@ -119,13 +121,13 @@ class MyWindow(Window):
         platform_x = randint(160, self.width - 160)
         platform_y = randint(min_height_to_create, max_height_to_create)
 
-        while not self.check_valid_coordinates(platform_x, platform_y):
+        while not self.check_platform_valid_coordinates(platform_x, platform_y):
             platform_x = randint(160, self.width - 160)
             platform_y = randint(min_height_to_create, max_height_to_create)
 
         return platform_x, platform_y
 
-    def check_valid_coordinates(self, platform_x: int, platform_y: int) -> bool:
+    def check_platform_valid_coordinates(self, platform_x: int, platform_y: int) -> bool:
         """
         Проверяет, что новая платформа не пересекает другие\n
         :param platform_x: координата новой платформы по Х
@@ -151,14 +153,52 @@ class MyWindow(Window):
             if platforms[i].center_y < camera_y:
                 platforms.pop(i)
 
+    def new_monster(self):
+        """Добавление монстра в игру"""
+        valid_for_creation = 3
+        if self.number_of_platforms % valid_for_creation or len(self.scene["Monsters"]):
+            return
+
+        platform_for_monster = self.find_platform_for_monster()
+        if platform_for_monster is None:
+            return
+
+        monsters = [Penguin, Zombie, Penguin2]
+        monster = choice(monsters)(platform_for_monster.center_x, platform_for_monster.center_y + 160)
+        self.scene.add_sprite("Monsters", monster)
+
+    def find_platform_for_monster(self) -> Platform or None:
+        """Ищет платформу, на которой может появится монстр"""
+        for wall in self.scene["Walls"]:
+            wall: Platform
+            if wall.center_y > self.camera.position[1] + 900:
+                return wall
+        return None
+
+    def delete_monster(self):
+        """Удаление монстра"""
+        monsters = self.scene["Monsters"]
+        if not len(monsters):
+            return
+
+        camera_y = self.camera.position[1]
+
+        if monsters[0].center_y < camera_y:
+            monsters.pop()
+
+    def who_is_killed(self):
+        """Проверка пересечения героя и монстров + убийство одного из них"""
+
+    # TODO дописать методы для монстров (реализация пока не нужна)
+
     def on_update(self, delta_time: float):
         """Обновление местоположения всех объектов игры"""
         if self.is_fallen():
             close_window()
 
         if (
-            self.number_of_platforms == DECREASE_PLATFORMS_LEVEL_1
-            and self.count_platforms > COUNT_PLATFORMS - 1
+                self.number_of_platforms == DECREASE_PLATFORMS_LEVEL_1
+                and self.count_platforms > COUNT_PLATFORMS - 1
         ):
             self.count_platforms -= 1
         self.hero.on_update(walls=self.scene["Walls"])
@@ -166,6 +206,8 @@ class MyWindow(Window):
         self.hero_stay_visible()
         self.delete_platforms()
         self.new_platforms()
+        self.delete_monster()
+        self.new_monster()
 
     def is_fallen(self) -> bool:
         """Проверяет, упал ли герой"""
