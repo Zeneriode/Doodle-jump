@@ -164,7 +164,7 @@ class MyWindow(Window):
             return
 
         monsters = [Penguin, Zombie, Penguin2]
-        monster = choice(monsters)(platform_for_monster.center_x, platform_for_monster.center_y + 160)
+        monster = choice(monsters)(platform_for_monster)
         self.scene.add_sprite("Monsters", monster)
 
     def find_platform_for_monster(self) -> Platform or None:
