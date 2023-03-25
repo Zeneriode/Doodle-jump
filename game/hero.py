@@ -42,13 +42,19 @@ class Hero(Sprite):
     # TODO дописать документацию
     def __load_textures(self):
         """"""  # Текстуры для динамических картинок(параметры для картинокк)
-        texture_facing_left = load_texture("assets/dynamic_pics/hero.piskel.down.png", flipped_horizontally=True)
+        texture_facing_left = load_texture(
+            "assets/dynamic_pics/hero.piskel.down.png", flipped_horizontally=True
+        )
         self.textures.append(texture_facing_left)
 
-        texture_facing_right_short_legs = load_texture("assets/dynamic_pics/hero.piskel.up.png")
+        texture_facing_right_short_legs = load_texture(
+            "assets/dynamic_pics/hero.piskel.up.png"
+        )
         self.textures.append(texture_facing_right_short_legs)
 
-        texture_facing_left_short_legs = load_texture("assets/dynamic_pics/hero.piskel.up.png", flipped_horizontally=True)
+        texture_facing_left_short_legs = load_texture(
+            "assets/dynamic_pics/hero.piskel.up.png", flipped_horizontally=True
+        )
         self.textures.append(texture_facing_left_short_legs)
 
     # TODO дописать документацию
@@ -78,10 +84,10 @@ class Hero(Sprite):
         """Заставляет героя прыгать"""
         for wall in walls:
             if (
-                    self.bottom <= wall.top < self.bottom + 30
-                    and self.right > wall.left + 70
-                    and self.left < wall.right - 20
-                    and self.change_y < 0
+                self.bottom <= wall.top < self.bottom + 30
+                and self.right > wall.left + 70
+                and self.left < wall.right - 20
+                and self.change_y < 0
             ):
                 """Указываем с какой силой герой должен отпрыгнуть от той или иной платформы"""
                 if isinstance(wall, SimplePlatform):

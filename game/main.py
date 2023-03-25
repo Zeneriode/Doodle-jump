@@ -19,10 +19,10 @@ from arcade import (
 from constants import CAMERA_SHIFT, COUNT_PLATFORMS, DECREASE_PLATFORMS_LEVEL_1
 from game_platforms import Platform, PlatformJump, SimplePlatform, Trampoline
 from hero import Hero
+from monsters import Penguin, Zombie, Penguin2
 from numpy import array
 from numpy.linalg import norm
 from numpy.random import choice
-from monsters import Penguin, Zombie, Penguin2
 from pyglet.math import Vec2
 
 
@@ -104,7 +104,7 @@ class MyWindow(Window):
             )
 
     def generate_type_platform(
-            self,
+        self,
     ) -> Type[Union[SimplePlatform, PlatformJump, Trampoline]]:
         """Генерирует тип платформы"""
         simple_platforms_in_row = 12
@@ -129,7 +129,9 @@ class MyWindow(Window):
 
         return platform_x, platform_y
 
-    def check_platform_valid_coordinates(self, platform_x: int, platform_y: int) -> bool:
+    def check_platform_valid_coordinates(
+            self, platform_x: int, platform_y: int
+    ) -> bool:
         """
         Проверяет, что новая платформа не пересекает другие\n
         :param platform_x: координата новой платформы по Х
@@ -201,8 +203,8 @@ class MyWindow(Window):
         if self.is_fallen():
             close_window()
         if (
-                self.number_of_platforms == DECREASE_PLATFORMS_LEVEL_1
-                and self.count_platforms > COUNT_PLATFORMS - 1
+            self.number_of_platforms == DECREASE_PLATFORMS_LEVEL_1
+            and self.count_platforms > COUNT_PLATFORMS - 1
         ):
             self.count_platforms -= 1
         self.hero.on_update(walls=self.scene["Walls"])

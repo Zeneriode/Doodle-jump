@@ -6,15 +6,17 @@
 """
 # TODO подправить всё, на что жалуется линтер
 from arcade import Sprite
-from game_platforms import Platform
 from constants import MONSTER_JUMP, G
+from game_platforms import Platform
 
 
 class Monster(Sprite):
-    def __init__(self, file: str, platform: Platform):
-        """Конструктор для монстров"""
-        super().__init__(file, center_x=platform.center_x, center_y=platform.center_y + 250,
-                         hit_box_algorithm="Detailed")
+    super().__init__(
+        file,
+        center_x=platform.center_x,
+        center_y=platform.center_y + 250,
+        hit_box_algorithm="Detailed",
+    )
         self.__platform = platform
 
     def on_update(self, delta_time: float = 1 / 60):
