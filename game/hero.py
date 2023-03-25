@@ -3,6 +3,7 @@
 Реализован класс главного героя с единственным конструктором.
 Герой может прыгать, двигаться и стрелять.
 """
+# TODO подправить заступы за линию (+120 символов)
 from arcade import Sprite, SpriteList, load_texture
 from constants import (
     HERO_JUMP,
@@ -13,6 +14,7 @@ from constants import (
     HERO_START_Y,
     HERO_TRAMPOLINE,
     SCALE,
+    G,
 )
 from game_platforms import PlatformJump, SimplePlatform, Trampoline
 
@@ -37,8 +39,9 @@ class Hero(Sprite):
         self.slowdown = HERO_SLOWDOWN
         self.__load_textures()
 
+    # TODO дописать документацию
     def __load_textures(self):
-        """"""  # TODO дописать документацию
+        """"""  # Текстуры для динамических картинок(параметры для картинокк)
         texture_facing_left = load_texture("assets/dynamic_pics/hero.piskel.down.png", flipped_horizontally=True)
         self.textures.append(texture_facing_left)
 
@@ -48,8 +51,9 @@ class Hero(Sprite):
         texture_facing_left_short_legs = load_texture("assets/dynamic_pics/hero.piskel.up.png", flipped_horizontally=True)
         self.textures.append(texture_facing_left_short_legs)
 
-    def __update_animation(self, delta_time: float = 1 / 60):
-        """"""  # TODO дописать документацию
+    # TODO дописать документацию
+    def __update_animation(self):
+        """"""  # отвечает за анимацию в игре
         face_to_left = self.change_x < 0
 
         short_legs = self.change_y >= 0
@@ -58,9 +62,8 @@ class Hero(Sprite):
 
     def on_update(self, delta_time: float = 1 / 60, walls: SpriteList = SpriteList()):
         """Обновляет движение героя"""
-        gravity = 25
-        self.change_y -= gravity * delta_time
-        self.__update_animation(delta_time)
+        self.change_y -= G * delta_time
+        self.__update_animation()
 
         if not self.is_moved:
             self.change_x /= self.slowdown

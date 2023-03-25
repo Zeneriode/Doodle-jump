@@ -4,8 +4,10 @@
 Монстры прыгают на одном месте (на платформе)
 При соприкосновение героя с монстром не с верху герой умирает (падает вниз)
 """
+# TODO подправить всё, на что жалуется линтер
 from arcade import Sprite
 from game_platforms import Platform
+from constants import MONSTER_JUMP, G
 
 
 class Monster(Sprite):
@@ -17,22 +19,21 @@ class Monster(Sprite):
 
     def on_update(self, delta_time: float = 1 / 60):
         """Обновляет движение монстра"""
-        gravity = 25
-        self.change_y -= gravity * delta_time
+        self.change_y -= G * delta_time
 
         self.center_y += self.change_y
 
         self.__jump()
 
-    # TODO дописать код для прыжка монстра (делали в конце урока, надо вспомнить и повторить)
     def __jump(self):
         """Заставляет монстра прыгать"""
         if self.bottom <= self.__platform.top:
+            self.change_y = MONSTER_JUMP
 
 
 class Penguin(Monster):
     """
-    Дописать
+    Дописать # TODO дописать документацию для подклассов
     """
 
     def __init__(self, platform: Platform):
@@ -41,7 +42,7 @@ class Penguin(Monster):
 
 class Zombie(Monster):
     """
-    Дописать
+    Дописать # TODO дописать документацию для подклассов
     """
 
     def __init__(self, platform: Platform):
@@ -50,7 +51,7 @@ class Zombie(Monster):
 
 class Penguin2(Monster):
     """
-    Дописать
+    Дописать # TODO дописать документацию для подклассов
     """
 
     def __init__(self, platform: Platform):

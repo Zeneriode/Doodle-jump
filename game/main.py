@@ -113,8 +113,10 @@ class MyWindow(Window):
 
         return choice([PlatformJump, Trampoline])
 
+    # TODO проверить на ошибки от линтера и исправить их
     def generate_platform_coordinates(self) -> tuple:
         """Генерирует случайные координаты для новой платформы"""
+        # pylint: disable=magic-value-comparison
         min_height_to_create = int(self.hero.max_height) + 300
         max_height_to_create = min_height_to_create + 600
 
@@ -153,6 +155,7 @@ class MyWindow(Window):
             if platforms[i].center_y < camera_y:
                 platforms.pop(i)
 
+    # TODO проверить на жалобы от линтера
     def new_monster(self):
         """Добавление монстра в игру"""
         valid_for_creation = 3
@@ -167,14 +170,16 @@ class MyWindow(Window):
         monster = choice(monsters)(platform_for_monster)
         self.scene.add_sprite("Monsters", monster)
 
+    # TODO проверить на жалобы от линтера
     def find_platform_for_monster(self) -> Platform or None:
         """Ищет платформу, на которой может появится монстр"""
         for wall in self.scene["Walls"]:
             wall: Platform
-            if wall.center_y > self.camera.position[1] + 900:
+            if wall.center_y > self.camera.position[1] + self.height:
                 return wall
         return None
 
+    # TODO проверить на жалобы от линтера
     def delete_monster(self):
         """Удаление монстра"""
         monsters = self.scene["Monsters"]
@@ -186,22 +191,23 @@ class MyWindow(Window):
         if monsters[0].center_y < camera_y:
             monsters.pop()
 
+    # Не трогать, даже если линтер жалуется
     def who_is_killed(self):
         """Проверка пересечения героя и монстров + убийство одного из них"""
 
-    # TODO дописать методы для монстров (реализация пока не нужна)
-
+    # TODO проверить на жалобы от линтера
     def on_update(self, delta_time: float):
         """Обновление местоположения всех объектов игры"""
         if self.is_fallen():
             close_window()
-
         if (
                 self.number_of_platforms == DECREASE_PLATFORMS_LEVEL_1
                 and self.count_platforms > COUNT_PLATFORMS - 1
         ):
             self.count_platforms -= 1
         self.hero.on_update(walls=self.scene["Walls"])
+        for monster in self.scene["Monsters"]:
+            monster.on_update()
         self.camera_under_control()
         self.hero_stay_visible()
         self.delete_platforms()
