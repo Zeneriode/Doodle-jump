@@ -19,7 +19,7 @@ from arcade import (
 from constants import CAMERA_SHIFT, COUNT_PLATFORMS, DECREASE_PLATFORMS_LEVEL_1
 from game_platforms import Platform, PlatformJump, SimplePlatform, Trampoline
 from hero import Hero
-from monsters import Penguin, Zombie, Penguin2
+from monsters import Penguin, Penguin2, Zombie
 from numpy import array
 from numpy.linalg import norm
 from numpy.random import choice
@@ -130,7 +130,7 @@ class MyWindow(Window):
         return platform_x, platform_y
 
     def check_platform_valid_coordinates(
-            self, platform_x: int, platform_y: int
+        self, platform_x: int, platform_y: int
     ) -> bool:
         """
         Проверяет, что новая платформа не пересекает другие\n
