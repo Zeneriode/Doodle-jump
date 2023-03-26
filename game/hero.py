@@ -56,7 +56,7 @@ class Hero(Sprite):
         self.textures.append(texture_facing_left_short_legs)
 
     def __update_animation(self):
-        """ отвечает за анимацию в игре"""
+        """отвечает за анимацию в игре"""
         face_to_left = self.change_x < 0
 
         short_legs = self.change_y >= 0
