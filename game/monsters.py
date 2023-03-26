@@ -16,8 +16,8 @@ class Monster(Sprite):
             file,
             hit_box_algorithm="Detailed",
         )
-        self.center_x = platform.center_x,
-        self.center_y = platform.center_y + 250,
+        self.center_x = platform.center_x
+        self.center_y = platform.center_y + 250
         self.__platform = platform
 
     def on_update(self, delta_time: float = 1 / 60):
