@@ -4,7 +4,7 @@
 Файл запускает игру, запуск используется для тестирования.
 """
 from random import randint
-from typing import Type, Union
+from typing import Type, Union, Optional
 
 from arcade import (
     Camera,
@@ -173,10 +173,10 @@ class MyWindow(Window):
         self.scene.add_sprite("Monsters", monster)
 
     # TODO проверить на жалобы от линтера
-    def find_platform_for_monster(self) -> Platform or None:
+    def find_platform_for_monster(self) -> Optional[Platform]:
         """Ищет платформу, на которой может появится монстр"""
+        wall: Platform
         for wall in self.scene["Walls"]:
-            wall: Platform
             if wall.center_y > self.camera.position[1] + self.height:
                 return wall
         return None

@@ -5,9 +5,9 @@ from game import main
 from game.main import MyWindow
 
 
-def start_game(color: tuple[int, int, int] = None):
+def start_game(color: tuple[int, int, int] = (0, 0, -1)):
     """Запуск игры с конкретным цветом для заднего фона"""
-    if color is not None:
+    if color != (0, 0, -1):
         window = MyWindow(color)
     else:
         window = MyWindow()
