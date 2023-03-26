@@ -3,7 +3,6 @@
 Реализован класс главного героя с единственным конструктором.
 Герой может прыгать, двигаться и стрелять.
 """
-# TODO подправить заступы за линию (+120 символов)
 from arcade import Sprite, SpriteList, load_texture
 from constants import (
     HERO_JUMP,
@@ -39,9 +38,8 @@ class Hero(Sprite):
         self.slowdown = HERO_SLOWDOWN
         self.__load_textures()
 
-    # TODO дописать документацию
     def __load_textures(self):
-        """"""  # Текстуры для динамических картинок(параметры для картинокк)
+        """Текстуры для динамических картинок(параметры для картинокк)"""
         texture_facing_left = load_texture(
             "assets/dynamic_pics/hero.piskel.down.png", flipped_horizontally=True
         )
@@ -57,9 +55,8 @@ class Hero(Sprite):
         )
         self.textures.append(texture_facing_left_short_legs)
 
-    # TODO дописать документацию
     def __update_animation(self):
-        """"""  # отвечает за анимацию в игре
+        """ отвечает за анимацию в игре"""
         face_to_left = self.change_x < 0
 
         short_legs = self.change_y >= 0

@@ -4,19 +4,20 @@
 Монстры прыгают на одном месте (на платформе)
 При соприкосновение героя с монстром не с верху герой умирает (падает вниз)
 """
-# TODO подправить всё, на что жалуется линтер
 from arcade import Sprite
 from constants import MONSTER_JUMP, G
 from game_platforms import Platform
 
 
 class Monster(Sprite):
-    super().__init__(
-        file,
-        center_x=platform.center_x,
-        center_y=platform.center_y + 250,
-        hit_box_algorithm="Detailed",
-    )
+    def __init__(self, file: str, platform: Platform):
+        """Конструктор для монстров"""
+        super().__init__(
+            file,
+            center_x=platform.center_x,
+            center_y=platform.center_y + 250,
+            hit_box_algorithm="Detailed",
+        )
         self.__platform = platform
 
     def on_update(self, delta_time: float = 1 / 60):

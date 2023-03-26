@@ -4,7 +4,7 @@
 Файл запускает игру, запуск используется для тестирования.
 """
 from random import randint
-from typing import Type, Union, Optional
+from typing import Optional, Type, Union
 
 from arcade import (
     Camera,
@@ -113,7 +113,6 @@ class MyWindow(Window):
 
         return choice([PlatformJump, Trampoline])
 
-    # TODO проверить на ошибки от линтера и исправить их
     def generate_platform_coordinates(self) -> tuple:
         """Генерирует случайные координаты для новой платформы"""
         # pylint: disable=magic-value-comparison
@@ -157,7 +156,6 @@ class MyWindow(Window):
             if platforms[i].center_y < camera_y:
                 platforms.pop(i)
 
-    # TODO проверить на жалобы от линтера
     def new_monster(self):
         """Добавление монстра в игру"""
         valid_for_creation = 3
@@ -172,7 +170,6 @@ class MyWindow(Window):
         monster = choice(monsters)(platform_for_monster)
         self.scene.add_sprite("Monsters", monster)
 
-    # TODO проверить на жалобы от линтера
     def find_platform_for_monster(self) -> Optional[Platform]:
         """Ищет платформу, на которой может появится монстр"""
         wall: Platform
@@ -181,7 +178,6 @@ class MyWindow(Window):
                 return wall
         return None
 
-    # TODO проверить на жалобы от линтера
     def delete_monster(self):
         """Удаление монстра"""
         monsters = self.scene["Monsters"]
@@ -193,11 +189,9 @@ class MyWindow(Window):
         if monsters[0].center_y < camera_y:
             monsters.pop()
 
-    # Не трогать, даже если линтер жалуется
     def who_is_killed(self):
         """Проверка пересечения героя и монстров + убийство одного из них"""
 
-    # TODO проверить на жалобы от линтера
     def on_update(self, delta_time: float):
         """Обновление местоположения всех объектов игры"""
         if self.is_fallen():
