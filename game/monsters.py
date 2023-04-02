@@ -19,13 +19,14 @@ class Monster(Sprite):
         self.center_x = platform.center_x
         self.center_y = platform.center_y + 250
         self.__platform = platform
+        # TODO добавить alive переменную
 
     def on_update(self, delta_time: float = 1 / 60):
         """Обновляет движение монстра"""
         self.change_y -= G * delta_time
 
         self.center_y += self.change_y
-
+        # TODO проверять, живой ли
         self.__jump()
 
     def __jump(self):

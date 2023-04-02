@@ -36,6 +36,7 @@ class Hero(Sprite):
         self.is_moved = False
         self.speed = HERO_SPEED
         self.slowdown = HERO_SLOWDOWN
+        self.alive = True
         self.__load_textures()
 
     def __load_textures(self):
@@ -66,7 +67,10 @@ class Hero(Sprite):
     def on_update(self, delta_time: float = 1 / 60, walls: SpriteList = SpriteList()):
         """Обновляет движение героя"""
         self.change_y -= G * delta_time
-        self.__update_animation()
+        if self.alive:
+            self.__update_animation()
+
+            self.__jump(walls)
 
         if not self.is_moved:
             self.change_x /= self.slowdown
@@ -74,7 +78,6 @@ class Hero(Sprite):
         self.center_x += self.change_x
         self.center_y += self.change_y
 
-        self.__jump(walls)
         self.max_height = max(self.max_height, self.center_y)
 
     def __jump(self, walls: SpriteList):

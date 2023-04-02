@@ -19,10 +19,10 @@ from arcade import (
 from constants import CAMERA_SHIFT, COUNT_PLATFORMS, DECREASE_PLATFORMS_LEVEL_1
 from game_platforms import Platform, PlatformJump, SimplePlatform, Trampoline
 from hero import Hero
-from monsters import Penguin, Penguin2, Zombie
 from numpy import array
 from numpy.linalg import norm
 from numpy.random import choice
+from monsters import Penguin, Zombie, Penguin2, Monster
 from pyglet.math import Vec2
 
 
@@ -44,7 +44,6 @@ class MyWindow(Window):
     def setup(self):
         """Загружает и создает все необходимые объекты для игры/уровня/режима"""
         self.hero = Hero()
-
         self.scene = Scene()
         self.scene.add_sprite("Players", self.hero)
         self.scene.add_sprite_list("Walls", True)
@@ -73,12 +72,13 @@ class MyWindow(Window):
             return
 
         # движение вправо и влево
-        if symbol in (key.D, key.RIGHT):
-            self.hero.change_x = self.hero.speed
-            self.hero.is_moved = True
-        elif symbol in (key.A, key.LEFT):
-            self.hero.change_x = -self.hero.speed
-            self.hero.is_moved = True
+        if self.hero.alive:
+            if symbol in (key.D, key.RIGHT):
+                self.hero.change_x = self.hero.speed
+                self.hero.is_moved = True
+            elif symbol in (key.A, key.LEFT):
+                self.hero.change_x = -self.hero.speed
+                self.hero.is_moved = True
 
     def on_key_release(self, symbol: int, modifiers: int):
         """Выполняет команды, связанные с кнопками. Вызывается при отжатии клавиш"""
@@ -104,7 +104,7 @@ class MyWindow(Window):
             )
 
     def generate_type_platform(
-        self,
+            self,
     ) -> Type[Union[SimplePlatform, PlatformJump, Trampoline]]:
         """Генерирует тип платформы"""
         simple_platforms_in_row = 12
@@ -129,7 +129,7 @@ class MyWindow(Window):
         return platform_x, platform_y
 
     def check_platform_valid_coordinates(
-        self, platform_x: int, platform_y: int
+            self, platform_x: int, platform_y: int
     ) -> bool:
         """
         Проверяет, что новая платформа не пересекает другие\n
@@ -171,7 +171,7 @@ class MyWindow(Window):
         self.scene.add_sprite("Monsters", monster)
 
     def find_platform_for_monster(self) -> Optional[Platform]:
-        """Ищет платформу, на которой может появится монстр"""
+        """Ищет платформу, на которой может появиться монстр"""
         wall: Platform
         for wall in self.scene["Walls"]:
             if wall.center_y > self.camera.position[1] + self.height:
@@ -191,14 +191,21 @@ class MyWindow(Window):
 
     def who_is_killed(self):
         """Проверка пересечения героя и монстров + убийство одного из них"""
+        hero = self.hero
+        for monster in self.scene["Monsters"]:
+            monster: Monster
+            if hero.top >= monster.bottom >= hero.bottom and hero.right >= monster.left and hero.left <= monster.right:
+                hero.alive = False
+            if hero.bottom == monster.top:  # TODO проверить
+                monster.alive = False
 
     def on_update(self, delta_time: float):
         """Обновление местоположения всех объектов игры"""
         if self.is_fallen():
             close_window()
         if (
-            self.number_of_platforms == DECREASE_PLATFORMS_LEVEL_1
-            and self.count_platforms > COUNT_PLATFORMS - 1
+                self.number_of_platforms == DECREASE_PLATFORMS_LEVEL_1
+                and self.count_platforms > COUNT_PLATFORMS - 1
         ):
             self.count_platforms -= 1
         self.hero.on_update(walls=self.scene["Walls"])
@@ -210,6 +217,7 @@ class MyWindow(Window):
         self.new_platforms()
         self.delete_monster()
         self.new_monster()
+        self.who_is_killed()
 
     def is_fallen(self) -> bool:
         """Проверяет, упал ли герой"""
