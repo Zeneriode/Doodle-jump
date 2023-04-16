@@ -37,7 +37,7 @@ class Monster(Sprite):
 
 class Penguin(Monster):
     """
-    Дописать # TODO дописать документацию для подклассов
+    Отвечает за монстра с картинкой пингвина
     """
 
     def __init__(self, platform: Platform):
@@ -46,7 +46,7 @@ class Penguin(Monster):
 
 class Zombie(Monster):
     """
-    Дописать # TODO дописать документацию для подклассов
+    Отвечает за монстра с картинкой зомби
     """
 
     def __init__(self, platform: Platform):
@@ -55,7 +55,7 @@ class Zombie(Monster):
 
 class Penguin2(Monster):
     """
-    Дописать # TODO дописать документацию для подклассов
+    Отвечает за монстра с картинкой пингвина(2)
     """
 
     def __init__(self, platform: Platform):
